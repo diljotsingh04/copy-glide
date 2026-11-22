@@ -16,7 +16,7 @@ import {
   type DecryptedClip,
   type Session,
   type SyncStatus,
-} from '@clipsync/shared';
+} from '@copyglide/shared';
 import type { Settings, Store } from './store';
 
 export interface EngineState extends Settings {

@@ -2,7 +2,7 @@
 import { safeStorage } from 'electron';
 import fs from 'fs';
 import path from 'path';
-import type { Session } from '@clipsync/shared';
+import type { Session } from '@copyglide/shared';
 
 export interface Settings {
   /** Master switch. Off = no connection, no clipboard polling. */
@@ -44,7 +44,7 @@ export function createStore(dir: string): Store {
         const json = JSON.stringify(s);
         fs.writeFileSync(sessionFile, canEncrypt() ? safeStorage.encryptString(json) : json);
       } catch (err) {
-        console.error('[clipsync] could not save session', err);
+        console.error('[copyglide] could not save session', err);
       }
     },
     loadSettings() {
@@ -59,7 +59,7 @@ export function createStore(dir: string): Store {
         fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(settingsFile, JSON.stringify(s, null, 2));
       } catch (err) {
-        console.error('[clipsync] could not save settings', err);
+        console.error('[copyglide] could not save settings', err);
       }
     },
   };

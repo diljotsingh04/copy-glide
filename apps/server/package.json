@@ -1,17 +1,17 @@
 {
-  "name": "@clipsync/server",
+  "name": "@copyglide/server",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "wrangler dev --port 8787 --ip 127.0.0.1",
     "deploy": "wrangler deploy",
-    "db:migrate": "wrangler d1 migrations apply clipsync --local",
-    "db:migrate:remote": "wrangler d1 migrations apply clipsync --remote",
+    "db:migrate": "wrangler d1 migrations apply copyglide --local",
+    "db:migrate:remote": "wrangler d1 migrations apply copyglide --remote",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@clipsync/shared": "*",
+    "@copyglide/shared": "*",
     "hono": "^4.6.14"
   },
   "devDependencies": {

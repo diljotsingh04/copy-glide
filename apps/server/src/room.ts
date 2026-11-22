@@ -8,7 +8,7 @@ import {
   type ClientMessage,
   type ClipEnvelope,
   type ServerMessage,
-} from '@clipsync/shared/src/protocol';
+} from '@copyglide/shared/src/protocol';
 
 const MAX_CT_CHARS = 400_000; // ~300 KB ciphertext, well under the 1 MiB WebSocket message limit
 const REPLAY_BATCH = 50;

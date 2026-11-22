@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1A1745"/>
+      <stop offset="1" stop-color="#0A0B1A"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.68" cy="0.42" r="0.6">
+      <stop offset="0" stop-color="#7C6CFF" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#7C6CFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7DF0FF"/>
+      <stop offset="0.5" stop-color="#8B7CFF"/>
+      <stop offset="1" stop-color="#E58BFF"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="trail" gradientUnits="userSpaceOnUse" x1="150" y1="0" x2="380" y2="0">
+      <stop offset="0" stop-color="#7DF0FF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#7DF0FF" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="232" fill="url(#bg)"/>
+  <rect width="1024" height="1024" rx="232" fill="url(#glow)"/>
+  <rect x="2" y="2" width="1020" height="1020" rx="230" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="4"/>
+
+  <g transform="translate(28 0)">
+  <!-- the copy (origin card) -->
+  <rect x="236" y="236" width="372" height="452" rx="96" fill="#FFFFFF" fill-opacity="0.10" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="10"/>
+
+  <!-- glide trails -->
+  <g stroke="url(#trail)" stroke-linecap="round" stroke-width="40">
+    <line x1="168" y1="512" x2="372" y2="512"/>
+    <line x1="232" y1="600" x2="372" y2="600"/>
+    <line x1="292" y1="688" x2="372" y2="688"/>
+  </g>
+
+  <!-- the paste (arriving card) -->
+  <rect x="404" y="336" width="388" height="452" rx="100" fill="url(#card)"/>
+  <rect x="404" y="336" width="388" height="452" rx="100" fill="url(#sheen)"/>
+  </g>
+</svg>

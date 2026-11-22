@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
-  "name": "clipsync-server",
+  "name": "copyglide-server",
   "main": "src/index.ts",
   "compatibility_date": "2025-06-01",
   "durable_objects": {
@@ -11,8 +11,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "clipsync",
-      // Replace with the real id from `npx wrangler d1 create clipsync` before deploying.
+      "database_name": "copyglide",
+      // Replace with the real id from `npx wrangler d1 create copyglide` before deploying.
       "database_id": "00000000-0000-0000-0000-000000000000",
       "migrations_dir": "migrations"
     }

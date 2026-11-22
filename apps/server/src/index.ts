@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { createMiddleware } from 'hono/factory';
 import { sign, verify } from 'hono/jwt';
-import type { DeviceInfo, Platform } from '@clipsync/shared/src/protocol';
+import type { DeviceInfo, Platform } from '@copyglide/shared/src/protocol';
 import { UserRoom } from './room';
 
 export { UserRoom };
@@ -18,7 +18,7 @@ const app = new Hono<{ Bindings: Env; Variables: Vars }>();
 
 app.use('/api/*', cors({ origin: '*', allowHeaders: ['Content-Type', 'Authorization'] }));
 
-app.get('/', (c) => c.json({ ok: true, service: 'clipsync' }));
+app.get('/', (c) => c.json({ ok: true, service: 'copyglide' }));
 
 // ---------- helpers ----------
 

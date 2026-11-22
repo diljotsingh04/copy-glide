@@ -24,6 +24,7 @@ export function normalizeEmail(email: string): string {
 }
 
 export async function deriveAccountKeys(email: string, password: string): Promise<AccountKeys> {
+  // Key-derivation labels are protocol constants (kept from the original codename); changing them breaks existing logins.
   const salt = utf8ToBytes('clipsync:v1:' + normalizeEmail(email));
   const master = await scryptAsync(utf8ToBytes(password), salt, { N: 2 ** 15, r: 8, p: 1, dkLen: 32 });
   const authKey = bytesToHex(hkdf(sha256, master, undefined, 'clipsync-auth-v1', 32));

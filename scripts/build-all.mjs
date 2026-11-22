@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// One command to build every ClipSync target into a single release folder:
+// One command to build every CopyGlide target into a single release folder:
 //
 //   release/v<version>/
 //     windows/   Windows installer (.exe)                  — built on Windows
@@ -225,7 +225,7 @@ async function packageDesktop(ctx, { flags, outName }) {
 const startedAt = Date.now();
 const git = gitInfo();
 
-log(bold(`ClipSync release build v${version}`));
+log(bold(`CopyGlide release build v${version}`));
 log(`  Output folder : ${OUT}`);
 log(`  Host          : ${host} ${os.arch()} · Node ${process.version}`);
 log(`  Git commit    : ${git.commit}${git.dirty ? ' (uncommitted changes)' : ''}`);
@@ -263,7 +263,7 @@ let webBuilt = false;
 if (needWebBuild) {
   await step('web-build', 'Build the web UI', async (ctx) => {
     if (!preflightOk) return skipped('preflight failed');
-    await exec(ctx, 'npm run build -w @clipsync/web', { env: { VITE_SERVER_URL: serverUrl } });
+    await exec(ctx, 'npm run build -w @copyglide/web', { env: { VITE_SERVER_URL: serverUrl } });
     webBuilt = true;
   });
 }
@@ -294,7 +294,7 @@ if (wanted('server')) {
     fs.copyFileSync(path.join(SERVER, 'wrangler.jsonc'), path.join(dest, 'wrangler.jsonc'));
     writeNote(
       dest,
-      `Cloudflare Worker for ClipSync.
+      `Cloudflare Worker for CopyGlide.
 
 worker/        The bundled Worker code (what Cloudflare will run) — for inspection/archiving.
 migrations/    D1 database schema.
@@ -303,7 +303,7 @@ wrangler.jsonc Config used for this build.
 Deploy from the repository (recommended):
   cd apps/server
   npx wrangler login
-  npx wrangler d1 create clipsync        # put the database_id into wrangler.jsonc (first time only)
+  npx wrangler d1 create copyglide        # put the database_id into wrangler.jsonc (first time only)
   npm run db:migrate:remote
   npx wrangler secret put JWT_SECRET     # first time only
   npm run deploy`,
@@ -368,7 +368,7 @@ await step('finalize', 'Write checksums and build info', async () => {
 
   fs.writeFileSync(
     path.join(OUT, 'README.txt'),
-    `ClipSync v${version} — built ${new Date().toISOString()} from commit ${git.commit}${git.dirty ? ' (with uncommitted changes)' : ''}
+    `CopyGlide v${version} — built ${new Date().toISOString()} from commit ${git.commit}${git.dirty ? ' (with uncommitted changes)' : ''}
 
 windows/   Windows installer (.exe)
 macos/     macOS disk image (.dmg)
@@ -392,7 +392,7 @@ Server URL built into the apps: ${serverUrl}
 const totalSeconds = Number(((Date.now() - startedAt) / 1000).toFixed(1));
 const failed = results.filter((r) => r.status === 'failed');
 const info = {
-  name: 'ClipSync',
+  name: 'CopyGlide',
   version,
   builtAt: new Date().toISOString(),
   durationSeconds: totalSeconds,
@@ -406,7 +406,7 @@ fs.writeFileSync(path.join(OUT, 'build-info.json'), JSON.stringify(info, null, 2
 const pad = (s, n) => String(s).padEnd(n);
 const lines = [
   '',
-  `Build summary — ClipSync v${version} (${totalSeconds}s)`,
+  `Build summary — CopyGlide v${version} (${totalSeconds}s)`,
   '-'.repeat(78),
   `${pad('Step', 15)}${pad('Status', 10)}${pad('Time', 8)}Details`,
   ...results.map((r) => `${pad(r.id, 15)}${pad(r.status, 10)}${pad(r.seconds + 's', 8)}${r.note || r.artifacts.join(', ')}`),

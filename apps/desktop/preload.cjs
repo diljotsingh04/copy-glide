@@ -1,10 +1,12 @@
 // Exposes a small, safe API to the web UI. The UI never gets Node or Electron access directly.
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('clipsyncNative', {
+contextBridge.exposeInMainWorld('copyglideNative', {
   platform: process.platform,
   getInfo: () => ipcRenderer.invoke('app:info'),
   writeText: (text) => ipcRenderer.invoke('clipboard:write', String(text)),
+  openExternal: (url) => ipcRenderer.invoke('app:openExternal', String(url)),
+  setTheme: (dark) => ipcRenderer.invoke('window:setTheme', Boolean(dark)),
 
   getSession: () => ipcRenderer.invoke('engine:getSession'),
   setSession: (session) => ipcRenderer.invoke('engine:setSession', session),

@@ -1,6 +1,6 @@
-import type { Session } from '@clipsync/shared';
+import type { Session } from '@copyglide/shared';
 
-const KEY = 'clipsync.session';
+const KEY = 'copyglide.session';
 
 export const DEFAULT_SERVER_URL: string = import.meta.env.VITE_SERVER_URL ?? 'http://127.0.0.1:8787';
 

@@ -173,7 +173,7 @@ export class SyncClient {
         this.opts.onCleared?.();
         break;
       case 'error':
-        console.warn('[clipsync] server error:', msg.message);
+        console.warn('[copyglide] server error:', msg.message);
         break;
     }
   }
@@ -183,7 +183,7 @@ export class SyncClient {
       const payload = decryptClip(this.opts.encKey, env);
       return { id: env.id, deviceId: env.deviceId, createdAt: env.createdAt, kind: payload.kind, text: payload.text };
     } catch {
-      console.warn('[clipsync] could not decrypt clip', env.id);
+      console.warn('[copyglide] could not decrypt clip', env.id);
       return null;
     }
   }

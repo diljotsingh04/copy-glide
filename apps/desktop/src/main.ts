@@ -1,16 +1,17 @@
-// ClipSync desktop: a lightweight tray app.
+// CopyGlide desktop: a lightweight tray app.
 // The sync engine lives here in the main process. The window (renderer) is created only when the
-// user opens it and is destroyed when closed, so a background ClipSync uses as little memory as possible.
-import { app, BrowserWindow, Menu, Tray, ipcMain, nativeImage, shell, type NativeImage } from 'electron';
+// user opens it and is destroyed when closed, so a background CopyGlide uses as little memory as possible.
+import { app, BrowserWindow, Menu, Tray, ipcMain, nativeImage, nativeTheme, shell } from 'electron';
 import os from 'os';
 import path from 'path';
-import type { Session } from '@clipsync/shared';
+import type { Session } from '@copyglide/shared';
 import { SyncEngine } from './engine';
 import { createStore, type Settings } from './store';
 
 const isDev = process.argv.includes('--dev');
 const startHidden = process.argv.includes('--hidden');
-const DEV_URL = process.env.CLIPSYNC_DEV_URL || 'http://localhost:5173';
+const DEV_URL = process.env.COPYGLIDE_DEV_URL || 'http://localhost:5173';
+const isMac = process.platform === 'darwin';
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -19,45 +20,40 @@ if (!app.requestSingleInstanceLock()) {
 
 // A simple UI doesn't need the GPU; skipping it saves memory and a busy GPU process.
 app.disableHardwareAcceleration();
-app.setAppUserModelId('app.clipsync.desktop');
+app.setName('CopyGlide');
+app.setAppUserModelId('app.copyglide.desktop');
 
 let win: BrowserWindow | null = null;
 let tray: Tray | null = null;
 let engine: SyncEngine;
 
-// ---------- icons (drawn in code; real artwork can replace these later) ----------
+// ---------- icons (generated from /brand by `npm run icons`) ----------
 
-function makeIcon(size: number, active: boolean): NativeImage {
-  const buf = Buffer.alloc(size * size * 4);
-  const r = size * 0.22;
-  const bg = active ? [91, 91, 240] : [140, 142, 158];
-  const dark = active ? [52, 48, 170] : [90, 92, 106];
-  const inRect = (x: number, y: number, x0: number, y0: number, x1: number, y1: number) =>
-    x >= x0 * size && x < x1 * size && y >= y0 * size && y < y1 * size;
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      const dx = Math.max(r - x, 0, x - (size - 1 - r));
-      const dy = Math.max(r - y, 0, y - (size - 1 - r));
-      if (dx * dx + dy * dy > r * r) continue;
-      let c = bg;
-      if (inRect(x, y, 0.27, 0.22, 0.73, 0.84)) c = [255, 255, 255];
-      if (inRect(x, y, 0.36, 0.44, 0.64, 0.5) || inRect(x, y, 0.36, 0.58, 0.58, 0.64)) c = bg;
-      if (inRect(x, y, 0.38, 0.14, 0.62, 0.28)) c = dark;
-      const i = (y * size + x) * 4;
-      buf[i] = c[2];
-      buf[i + 1] = c[1];
-      buf[i + 2] = c[0];
-      buf[i + 3] = 255;
-    }
-  }
-  return nativeImage.createFromBitmap(buf, { width: size, height: size });
+const asset = (name: string) => path.join(__dirname, '..', 'assets', name);
+const icons = {
+  app: nativeImage.createFromPath(asset('icon.png')),
+  trayOn: nativeImage.createFromPath(asset(isMac ? 'trayTemplate.png' : 'tray-on.png')),
+  trayOff: nativeImage.createFromPath(asset(isMac ? 'trayTemplate.png' : 'tray-off.png')),
+};
+if (isMac) {
+  icons.trayOn.setTemplateImage(true);
+  icons.trayOff.setTemplateImage(true);
 }
 
-const icons = {
-  app: makeIcon(64, true),
-  trayOn: makeIcon(32, true).resize({ width: 16, height: 16 }),
-  trayOff: makeIcon(32, false).resize({ width: 16, height: 16 }),
+// ---------- window chrome colours (match the UI's header) ----------
+
+const CHROME = {
+  light: { color: '#F6F6F9', symbolColor: '#2A2C3D' },
+  dark: { color: '#0B0C14', symbolColor: '#D6D8EA' },
 };
+let darkUi = nativeTheme.shouldUseDarkColors;
+
+function applyChrome(): void {
+  if (!win || win.isDestroyed()) return;
+  const c = darkUi ? CHROME.dark : CHROME.light;
+  win.setBackgroundColor(c.color);
+  if (!isMac) win.setTitleBarOverlay({ ...c, height: 52 });
+}
 
 // ---------- window ----------
 
@@ -69,15 +65,19 @@ function openWindow(): void {
     return;
   }
   app.dock?.show();
+  const c = darkUi ? CHROME.dark : CHROME.light;
   win = new BrowserWindow({
-    width: 440,
-    height: 720,
-    minWidth: 360,
-    minHeight: 480,
+    width: 460,
+    height: 760,
+    minWidth: 380,
+    minHeight: 520,
     icon: icons.app,
-    title: 'ClipSync',
-    autoHideMenuBar: true,
+    title: 'CopyGlide',
     show: false,
+    backgroundColor: c.color,
+    // The app's header doubles as the title bar; native window controls sit on top of it.
+    titleBarStyle: 'hidden',
+    ...(isMac ? { trafficLightPosition: { x: 18, y: 18 } } : { titleBarOverlay: { ...c, height: 52 } }),
     webPreferences: {
       preload: path.join(__dirname, '..', 'preload.cjs'),
       contextIsolation: true,
@@ -111,7 +111,7 @@ function sendToWindow(channel: string, payload: unknown): void {
 function statusLabel(): string {
   const s = engine.getState();
   if (!s.signedIn) return 'Not signed in';
-  if (!s.syncEnabled) return 'Sync stopped';
+  if (!s.syncEnabled) return 'Sync paused';
   return s.status === 'online' ? 'Synced' : s.status === 'connecting' ? 'Connecting…' : 'Offline — retrying';
 }
 
@@ -120,14 +120,14 @@ function updateTray(): void {
   const s = engine.getState();
   const on = s.signedIn && s.syncEnabled;
   tray.setImage(on ? icons.trayOn : icons.trayOff);
-  tray.setToolTip(`ClipSync — ${statusLabel()}`);
+  tray.setToolTip(`CopyGlide — ${statusLabel()}`);
   tray.setContextMenu(
     Menu.buildFromTemplate([
       { label: statusLabel(), enabled: false },
       { type: 'separator' },
-      { label: 'Open ClipSync', click: openWindow },
+      { label: 'Open CopyGlide', click: openWindow },
       {
-        label: s.syncEnabled ? 'Stop syncing' : 'Start syncing',
+        label: s.syncEnabled ? 'Pause syncing' : 'Resume syncing',
         enabled: s.signedIn,
         click: () => engine.updateSettings({ syncEnabled: !s.syncEnabled }),
       },
@@ -138,7 +138,7 @@ function updateTray(): void {
         click: (item) => app.setLoginItemSettings({ openAtLogin: item.checked, args: ['--hidden'] }),
       },
       { type: 'separator' },
-      { label: 'Quit ClipSync', click: () => app.quit() },
+      { label: 'Quit CopyGlide', click: () => app.quit() },
     ]),
   );
 }
@@ -147,6 +147,13 @@ function updateTray(): void {
 
 function registerIpc(): void {
   ipcMain.handle('app:info', () => ({ platform: process.platform, version: app.getVersion(), hostname: os.hostname() }));
+  ipcMain.handle('app:openExternal', (_e, url: unknown) => {
+    if (typeof url === 'string' && /^(https?:|mailto:|tel:)/i.test(url)) void shell.openExternal(url);
+  });
+  ipcMain.handle('window:setTheme', (_e, dark: unknown) => {
+    darkUi = !!dark;
+    applyChrome();
+  });
   ipcMain.handle('clipboard:write', (_e, text: unknown) => {
     if (typeof text === 'string') engine.writeClipboard(text);
   });

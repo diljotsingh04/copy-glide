@@ -1,21 +1,23 @@
 {
-  "name": "@clipsync/desktop",
+  "name": "@copyglide/desktop",
+  "productName": "CopyGlide",
   "version": "0.1.0",
   "private": true,
-  "description": "ClipSync — sync your clipboard across all your devices",
-  "author": "ClipSync",
-  "homepage": "https://clipsync.app",
+  "description": "CopyGlide — sync your clipboard across all your devices",
+  "author": "CopyGlide",
+  "homepage": "https://copyglide.app",
   "main": "dist/main.cjs",
   "scripts": {
     "build:main": "node build.mjs",
-    "build:renderer": "npm run build -w @clipsync/web && node scripts/copy-renderer.cjs",
+    "build:renderer": "npm run build -w @copyglide/web && node scripts/copy-renderer.cjs",
     "dev": "node build.mjs && electron . --dev",
     "start": "npm run build:renderer && node build.mjs && electron .",
     "dist": "npm run build:renderer && node build.mjs && electron-builder",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@clipsync/shared": "*",
+    "@copyglide/shared": "*",
+    "@resvg/resvg-js": "^2.6.2",
     "@types/ws": "^8.18.2",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
@@ -24,33 +26,40 @@
     "ws": "^8.23.0"
   },
   "build": {
-    "appId": "app.clipsync.desktop",
-    "productName": "ClipSync",
+    "appId": "app.copyglide.desktop",
+    "productName": "CopyGlide",
     "files": [
       "dist/**",
       "preload.cjs",
-      "renderer/**"
+      "renderer/**",
+      "assets/**"
     ],
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "build"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.png"
     },
     "nsis": {
       "oneClick": true,
-      "perMachine": false
+      "perMachine": false,
+      "shortcutName": "CopyGlide"
     },
     "mac": {
       "target": "dmg",
-      "category": "public.app-category.productivity"
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.png"
     },
     "linux": {
       "target": [
         "AppImage",
         "deb"
       ],
-      "category": "Utility"
+      "category": "Utility",
+      "icon": "build/icon.png",
+      "synopsis": "Copy here. Paste everywhere."
     }
   }
 }

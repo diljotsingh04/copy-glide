@@ -27,8 +27,11 @@ async function request<T>(
   opts: { method?: string; body?: unknown; token?: string } = {},
 ): Promise<T> {
   let res: Response;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15_000);
   try {
     res = await fetch(serverUrl.replace(/\/+$/, '') + path, {
+      signal: controller.signal,
       method: opts.method ?? 'GET',
       headers: {
         ...(opts.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
@@ -37,7 +40,9 @@ async function request<T>(
       body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
     });
   } catch {
-    throw new ApiError(0, 'Cannot reach the server. Check your connection.');
+    throw new ApiError(0, 'Can’t reach the server. Check your connection and try again.');
+  } finally {
+    clearTimeout(timer);
   }
   const data = (await res.json().catch(() => ({}))) as { error?: string };
   if (!res.ok) throw new ApiError(res.status, data.error ?? `Request failed (${res.status})`);

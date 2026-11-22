@@ -1,5 +1,5 @@
 // Bridge exposed by the Electron preload script. Undefined when running in a normal browser.
-import type { DecryptedClip, Platform, Session, SyncStatus } from '@clipsync/shared';
+import type { DecryptedClip, Platform, Session, SyncStatus } from '@copyglide/shared';
 
 export interface NativeSettings {
   syncEnabled: boolean;
@@ -18,10 +18,12 @@ export type NativeEvent =
   | { type: 'received'; clip: DecryptedClip }
   | { type: 'signedOut' };
 
-export interface ClipsyncNative {
+export interface CopyglideNative {
   platform: string; // node's process.platform
   getInfo(): Promise<{ platform: string; version: string; hostname: string }>;
   writeText(text: string): Promise<void>;
+  openExternal(url: string): Promise<void>;
+  setTheme(dark: boolean): Promise<void>;
   getSession(): Promise<Session | null>;
   setSession(session: Session | null): Promise<void>;
   getState(): Promise<NativeState>;
@@ -34,11 +36,11 @@ export interface ClipsyncNative {
 
 declare global {
   interface Window {
-    clipsyncNative?: ClipsyncNative;
+    copyglideNative?: CopyglideNative;
   }
 }
 
-export const native: ClipsyncNative | undefined = typeof window !== 'undefined' ? window.clipsyncNative : undefined;
+export const native: CopyglideNative | undefined = typeof window !== 'undefined' ? window.copyglideNative : undefined;
 
 export function currentPlatform(): Platform {
   if (!native) return 'web';
@@ -65,3 +67,11 @@ export async function copyToClipboard(text: string): Promise<void> {
   if (native) return native.writeText(text);
   await navigator.clipboard.writeText(text);
 }
+
+export function openLink(url: string): void {
+  if (native) void native.openExternal(url);
+  else window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+export const isMac = native ? native.platform === 'darwin' : /Mac|iPhone|iPad/.test(navigator.platform);
+export const modKey = isMac ? '⌘' : 'Ctrl';

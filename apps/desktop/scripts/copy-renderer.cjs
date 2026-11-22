@@ -6,7 +6,7 @@ const src = path.resolve(__dirname, '../../web/dist');
 const dest = path.resolve(__dirname, '../renderer');
 
 if (!fs.existsSync(path.join(src, 'index.html'))) {
-  console.error('apps/web/dist not found. Run `npm run build -w @clipsync/web` first.');
+  console.error('apps/web/dist not found. Run `npm run build -w @copyglide/web` first.');
   process.exit(1);
 }
 fs.rmSync(dest, { recursive: true, force: true });

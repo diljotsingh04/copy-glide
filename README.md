@@ -1,4 +1,4 @@
-# ClipSync
+# CopyGlide
 
 Copy on one device, paste on all of them. One account, every platform, end-to-end encrypted.
 
@@ -77,8 +77,8 @@ Or double-click `build.cmd` (Windows) / run `./build.sh` (macOS, Linux). Everyth
 
 ```
 release/v0.1.0/
-  windows/   ClipSync Setup 0.1.0.exe        (built on Windows)
-  macos/     ClipSync-0.1.0.dmg              (built on macOS)
+  windows/   CopyGlide Setup 0.1.0.exe        (built on Windows)
+  macos/     CopyGlide-0.1.0.dmg              (built on macOS)
   linux/     .AppImage + .deb                (built on Linux)
   android/   (once apps/mobile exists)
   ios/       (once apps/mobile exists, macOS only)
@@ -99,8 +99,15 @@ release/v0.1.0/
 ```bash
 cd apps/server
 npx wrangler login
-npx wrangler d1 create clipsync          # put the returned database_id into wrangler.jsonc
+npx wrangler d1 create copyglide          # put the returned database_id into wrangler.jsonc
 npm run db:migrate:remote
 npx wrangler secret put JWT_SECRET
 npm run deploy
 ```
+
+## Brand
+
+- **Name:** CopyGlide (`copyglide.com` and `copyglide.app` were unregistered when checked on 2026-11-22; register them before launch, and run a proper trademark search).
+- **Logo:** a frosted "copy" card with a bright "paste" card gliding in on speed trails. Master files are in `brand/` (`logo-icon.svg`, `tray.svg`).
+- **Icons:** `npm run icons` regenerates every size from `brand/`: the desktop app and installer icon (`apps/desktop/build/icon.png`), tray icons (coloured, paused-grey and macOS template), and web favicons, touch icon and PWA icons.
+- **UI:** Inter typeface, lucide icons, light and dark themes (Auto/Light/Dark in Settings). On desktop the app header doubles as the window title bar.

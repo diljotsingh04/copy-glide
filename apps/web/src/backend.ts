@@ -8,7 +8,7 @@ import {
   type DecryptedClip,
   type Session,
   type SyncStatus,
-} from '@clipsync/shared';
+} from '@copyglide/shared';
 import { native, type NativeSettings } from './native';
 import { loadBool, saveBool } from './session';
 
@@ -84,7 +84,7 @@ class WebBackend extends BaseBackend implements Backend {
     super();
     this.state = {
       status: 'stopped',
-      syncEnabled: loadBool('clipsync.syncEnabled', true),
+      syncEnabled: loadBool('copyglide.syncEnabled', true),
       autoSend: false,
       autoCopy: false,
       clips: [],
@@ -122,7 +122,7 @@ class WebBackend extends BaseBackend implements Backend {
   }
   update(patch: Partial<NativeSettings>) {
     this.set(patch);
-    if (patch.syncEnabled !== undefined) saveBool('clipsync.syncEnabled', patch.syncEnabled);
+    if (patch.syncEnabled !== undefined) saveBool('copyglide.syncEnabled', patch.syncEnabled);
     this.apply();
   }
   dispose() {

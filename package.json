@@ -1,18 +1,19 @@
 {
-  "name": "clipsync",
+  "name": "copyglide",
   "private": true,
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
   "scripts": {
+    "icons": "node brand/generate-icons.mjs",
     "build:all": "node scripts/build-all.mjs",
-    "dev:server": "npm run dev -w @clipsync/server",
-    "dev:web": "npm run dev -w @clipsync/web",
-    "dev:desktop": "npm run dev -w @clipsync/desktop",
-    "db:migrate": "npm run db:migrate -w @clipsync/server",
+    "dev:server": "npm run dev -w @copyglide/server",
+    "dev:web": "npm run dev -w @copyglide/web",
+    "dev:desktop": "npm run dev -w @copyglide/desktop",
+    "db:migrate": "npm run db:migrate -w @copyglide/server",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "build:web": "npm run build -w @clipsync/web",
-    "dist:desktop": "npm run dist -w @clipsync/desktop"
+    "build:web": "npm run build -w @copyglide/web",
+    "dist:desktop": "npm run dist -w @copyglide/desktop"
   }
 }

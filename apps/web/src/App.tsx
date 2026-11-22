@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Session } from '@clipsync/shared';
+import type { Session } from '@copyglide/shared';
 import { AuthScreen } from './AuthScreen';
 import { MainScreen } from './MainScreen';
 import { native } from './native';
