@@ -67,14 +67,32 @@ npm run dev:desktop
 
 Local test account used during development: `demo@clipsync.test` / `demo-password-123` (local database only).
 
-## Build the desktop installer
+## Build everything (one command)
 
 ```bash
-npm run dist:desktop
+npm run build:all -- --server-url=https://your-server.example.com
 ```
 
-Output goes to `apps/desktop/release/` (`.exe` on Windows, `.dmg` on macOS, `.AppImage`/`.deb` on Linux).
-Set `VITE_SERVER_URL` to your deployed server URL before building.
+Or double-click `build.cmd` (Windows) / run `./build.sh` (macOS, Linux). Everything lands in `release/v<version>/`:
+
+```
+release/v0.1.0/
+  windows/   ClipSync Setup 0.1.0.exe        (built on Windows)
+  macos/     ClipSync-0.1.0.dmg              (built on macOS)
+  linux/     .AppImage + .deb                (built on Linux)
+  android/   (once apps/mobile exists)
+  ios/       (once apps/mobile exists, macOS only)
+  web/       static site, ready to upload
+  server/    Worker bundle, migrations, deploy notes
+  logs/      build.log (everything), one log per step, summary.txt
+  SHA256SUMS.txt  build-info.json  README.txt
+```
+
+- Targets that can't be built on the current computer are **skipped with the reason** (and a `README.txt` in that folder); the build continues.
+- Options: `--only=web,windows`, `--skip=server`, `--verbose` (stream all output), `--no-typecheck`, `--out=dir`, `--help`.
+- Exit code is `1` if any step failed; the failing step's last output lines are printed and its full log is in `logs/`.
+- Without `--server-url`, the apps point at the local dev server (`http://127.0.0.1:8787`) and the script warns you.
+- The Windows installer is unsigned for now, so Windows SmartScreen shows a warning until code signing is added.
 
 ## Deploy the server (Cloudflare free plan)
 

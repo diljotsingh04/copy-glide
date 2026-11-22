@@ -6,6 +6,7 @@
     "apps/*"
   ],
   "scripts": {
+    "build:all": "node scripts/build-all.mjs",
     "dev:server": "npm run dev -w @clipsync/server",
     "dev:web": "npm run dev -w @clipsync/web",
     "dev:desktop": "npm run dev -w @clipsync/desktop",
