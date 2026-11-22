@@ -2,6 +2,8 @@
 
 Copy on one device, paste on all of them. One account, every platform, end-to-end encrypted.
 
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the full technical overview (databases, protocol, security).
+
 ## Monorepo layout
 
 ```
