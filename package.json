@@ -1,0 +1,17 @@
+{
+  "name": "clipsync",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w @clipsync/server",
+    "dev:web": "npm run dev -w @clipsync/web",
+    "dev:desktop": "npm run dev -w @clipsync/desktop",
+    "db:migrate": "npm run db:migrate -w @clipsync/server",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build:web": "npm run build -w @clipsync/web",
+    "dist:desktop": "npm run dist -w @clipsync/desktop"
+  }
+}

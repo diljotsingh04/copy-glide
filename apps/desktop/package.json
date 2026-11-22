@@ -1,0 +1,56 @@
+{
+  "name": "@clipsync/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ClipSync — sync your clipboard across all your devices",
+  "author": "ClipSync",
+  "homepage": "https://clipsync.app",
+  "main": "dist/main.cjs",
+  "scripts": {
+    "build:main": "node build.mjs",
+    "build:renderer": "npm run build -w @clipsync/web && node scripts/copy-renderer.cjs",
+    "dev": "node build.mjs && electron . --dev",
+    "start": "npm run build:renderer && node build.mjs && electron .",
+    "dist": "npm run build:renderer && node build.mjs && electron-builder",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@clipsync/shared": "*",
+    "@types/ws": "^8.18.2",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.9.3",
+    "ws": "^8.23.0"
+  },
+  "build": {
+    "appId": "app.clipsync.desktop",
+    "productName": "ClipSync",
+    "files": [
+      "dist/**",
+      "preload.cjs",
+      "renderer/**"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  }
+}
