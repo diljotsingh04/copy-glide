@@ -14,6 +14,7 @@
     "db:migrate": "npm run db:migrate -w @copyglide/server",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "build:web": "npm run build -w @copyglide/web",
-    "dist:desktop": "npm run dist -w @copyglide/desktop"
+    "dist:desktop": "npm run dist -w @copyglide/desktop",
+    "stop": "node scripts/stop-all.mjs"
   }
 }

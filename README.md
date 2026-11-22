@@ -67,6 +67,14 @@ npm run dev:desktop
 - Web app: http://localhost:5173
 - Desktop app: opens a window and a tray icon, loading the web app from the dev server
 
+### Stop everything
+
+```bash
+npm run stop
+```
+
+Or double-click `stop.cmd`. This stops the sync server, the web dev server, the dev desktop app and the installed CopyGlide tray app, frees ports 8787 and 5173, and then confirms nothing is left. Use `npm run stop -- --keep-app` to leave the installed app running.
+
 Local test account used during development: `demo@clipsync.test` / `demo-password-123` (local database only).
 
 ## Build everything (one command)
